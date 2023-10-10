@@ -10,6 +10,10 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", process.cwd() + "/src/client/html");
 
+//json 데이터 파싱 미들웨어
+app.use(express.json());
+
+
 app.use("/css", express.static("src/client/css"));
 app.use("/js", express.static("src/client/js"));
 app.use("/file", express.static("src/client/file"));

@@ -9,6 +9,13 @@ const msgAlert = (position, message, type) => {
     Toast.fire({ title: message, icon: type });
 }
 
+const getCurrentPosition = () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    })
+}
+
+
 const courseCheckFetch = async (qrCode) => {
     //   TODO 로그인 여부 체크
 
@@ -18,7 +25,38 @@ const courseCheckFetch = async (qrCode) => {
         setTimeout(startScan,3000);
         return;
     }
+
+        //  내가 찍은 위치정보 가져오기
+        const currentPosition = await getCurrentPosition();
+        // console.log(currentPosition);
+        const coords = currentPosition.coords;
+    
+        if (!coords) {
+            msgAlert("bottom", "위치정보 오류", "error");
+            setTimeout(startScan, 3000);
+            return;
+        }
+    
+    console.log("성공")
+
+    
+    //서버전송
+    //QR코드, 현재 사용자 위치정보(laritude, longitude)
+    const response = await fetch('/api/courses',{
+        method: 'POST',
+        headers : {
+            'Content-Type': 'application/json',
+            Accept:'application/json',
+            //TODO 로그인 토큰
+        },
+        body : JSON.stringify({
+            qrCode : qrCode,
+            latitude : coords.latitude,
+            longitude : coords.longitude,
+        })
+    });
 }
+
 
 
 
