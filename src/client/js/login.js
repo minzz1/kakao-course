@@ -1,7 +1,8 @@
-const joinBtn = document.getElementById("joinBtn")
+const joinBtn = document.querySelector(".join");
+const loginBtn = document.querySelector(".login")
 const userIdInput = document.getElementById("userId")
 const userPasswordInput = document.getElementById("userPassword")
-const userNameInput = document.getElementById("userName")
+
 
 const msgAlert = (position, message, type) => {
     const Toast = Swal.mixin({
@@ -13,16 +14,15 @@ const msgAlert = (position, message, type) => {
     Toast.fire({title: message, icon : type })
 }
 
-
-
-const joinFetch = async () => {
+const loginFetch = async () => {
     const userId = userIdInput.value;
     const userPassword = userPasswordInput.value;
-    const userName = userNameInput.value;
 
-    if(!userId || !userPassword || !userName){
+
+    if(!userId || !userPassword){
         msgAlert("bottom","모든 필드를 채워주세요","error")
     }
+
 
     const response = await fetch("/api/join",{
         method: 'POST',
@@ -33,21 +33,13 @@ const joinFetch = async () => {
         body : JSON.stringify({
             userId : userId,
             userPassword : userPassword,
-            userName : userName,
         })
     })
-  const result = await response.json();
+    const result = await response.json();
 
-  if(response.status === 201) {
-    msgAlert("center", "회원가입 성공" ,"success");
-    setTimeout(()=>{
-        window.location.href = "/login";
-    }, 1000)
-  } else {
-    msgAlert("bottom", result.status, "error")
-  }
+    console.log(result);
 }
 
-joinBtn.addEventListener('click', joinFetch)
 
 
+joinBtn.addEventListener('click', () => window.location.href = "/join");
