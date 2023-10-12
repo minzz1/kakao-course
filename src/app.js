@@ -20,6 +20,7 @@ app.use("/file", express.static("src/client/file"));
 app.use("/api", apiRouter);
 app.use("/", viewRouter);
 
+
 app.listen(8088, () => {
   console.info("8088 포트 서버 열림 http://localhost:8088");
 });

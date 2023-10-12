@@ -12,7 +12,7 @@ export const getCourseList = async (request, response) => {
     ON c.course_id = uc.course_id AND uc.user_id = ?`
 
     // 데이터베이스 보내는 것
-    const courseList = await db.execute(QUERY, [7])
+    const courseList = await db.execute(QUERY, [userId])
                                 .then((result) => result[0]);
 
     response.json(courseList); 
@@ -20,7 +20,7 @@ export const getCourseList = async (request, response) => {
 
 export const qrCheck = async (request, response) => {
     // TODO 임의로 유저 데이터 만듬
-    const userId = 7;
+    const userId = request.user.user_id;
 
     const qrInfoData = request.body;
     // 검증코드 1 : 들어온 qr코드에 해당하는 코스가 있는지 여부

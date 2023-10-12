@@ -150,7 +150,20 @@ const afterGetCourseList = () => {
 
 // 백엔드 서버로 코스정보 요청
 const getCourseListFetch = async () => {
-    const response = await fetch("/api/courses");
+    const accessToken = localStorage.getItem("accessToken");
+    if(!accessToken) {
+        window.location.href = "/login?error=need_login";
+    }
+
+    const response = await fetch("/api/courses", {
+        headers : {
+            Authorization : "Bearer " +  accessToken
+        }
+    });
+    if(response.status === 401) {
+        return window.location.href = "/login?error=need_login";
+    }
+
     const result = await response.json();
     courseListInfo = result;
 

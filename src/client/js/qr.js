@@ -16,7 +16,11 @@ const getCurrentPosition = () => {
 
 const courseCheckFetch = async (qrCode) => {
     // TODO 로그인 여부체크 
-    
+    const accessToken = localStorage.getItem("accessToken");
+    if(!accessToken) {
+        window.location.href = "/login?error=need_login";
+    }
+
     // qrCode 잘못된 요청 확인
     if(!qrCode) {
         msgAlert("bottom", "잘못된 QR코드", "error");
@@ -40,7 +44,7 @@ const courseCheckFetch = async (qrCode) => {
         headers : {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            // TODO 로그인 토큰
+            Authorization : "Bearer " +  accessToken
         },
         body : JSON.stringify({
             qrCode : qrCode,
@@ -52,6 +56,14 @@ const courseCheckFetch = async (qrCode) => {
 
     if(response.status === 201) {
         msgAlert("center", "방문 완료", "success");
+        return setTimeout(() => {
+            window.location.href = "/course"
+        }, 3000);
+    } else if(response.status === 401) {
+        msgAlert("center", result.status, "error");
+        return setTimeout(() => {
+            window.location.href = "/login?error=need_login";
+        }, 3000);
     } else {
         msgAlert("center", result.status, "error");
     }
